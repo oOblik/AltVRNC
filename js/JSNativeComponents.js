@@ -33,6 +33,8 @@ NativeComponent.prototype.init = function() {
 		this.update(this.data);
 	}
 	
+	this.isInit = true;
+	
 	return this;
 };
 
