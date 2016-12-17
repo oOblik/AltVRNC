@@ -1,0 +1,63 @@
+<html>
+	<head>
+		<title>AltspaceVR Native Components in JS</title>
+		<script type="text/javascript" src="https://cdn.rawgit.com/mrdoob/three.js/dev/build/three.js"></script>
+		<script type="text/javascript" src="https://sdk.altvr.com/libs/altspace.js/0.25.0/altspace.min.js"></script>
+		<script type="text/javascript" src="js/JSNativeComponents.js"></script>
+		<script>
+			var TestApp = (function() {
+				var scene = new THREE.Scene();
+				var renderer = altspace.getThreeJSRenderer();
+				var root = new THREE.Object3D();
+				
+				var myClock;
+				
+				scene.add(root);
+				
+				function init() {
+
+					altspace.getEnclosure().then(function(enc) {
+						console.log('Enclosure Data:', enc);
+						root.scale.multiplyScalar(enc.pixelsPerMeter);
+						
+						loadAssets();
+					});
+
+				}
+				
+				function loadAssets() {
+					myClock = new NativeComponent('n-text', {
+						fontSize: 100,
+						width: 100,
+						height: 1,
+						horizontalAlign: 'middle',
+						verticalAlign: 'middle'	
+					}).addTo(root);
+					
+					animate();
+				}
+				
+				function animate() {
+					
+					var epochtime = (new Date).getTime();
+					
+					myClock.update({ text: String(epochtime) }, function(obj) {
+						obj.rotation.y += 0.001;
+					});
+					
+					requestAnimationFrame(animate);
+					renderer.render(scene);
+				}
+				
+				return { init: init };
+			}());
+			
+			window.onload = function() {
+				TestApp.init();	
+			}
+		</script>
+	</head>
+	<body>
+
+	</body>
+</html>
