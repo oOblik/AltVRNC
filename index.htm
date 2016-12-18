@@ -11,6 +11,7 @@
 				var root = new THREE.Object3D();
 				
 				var myClock;
+				var testCollider;
 				
 				scene.add(root);
 				
@@ -34,9 +35,16 @@
 						verticalAlign: 'middle'	
 					}).addTo(root);
 					
-					test = new NativeComponent('n-object', {
-						res: 'effects/fireworks'
-					}).addTo(root);
+					var geometry = new THREE.BoxGeometry(5, 5, 5);
+					var material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+					var testBox = new THREE.Mesh(geometry, material);
+					testBox.position.x = -10;
+					
+					testCollider = new NativeComponent('n-box-collider', {
+						center: THREE.Vector3(0, 0, 0),
+						radius: 0,
+						type: 'environment'
+					}, testBox).addTo(root);
 					
 					animate();
 				}
@@ -47,6 +55,10 @@
 					
 					myClock.update({ text: String(epochtime) }, function(obj) {
 						obj.rotation.y += 0.001;
+					});
+					
+					testCollider.getMesh(function(obj) {
+						obj.rotation.y += 0.002;
 					});
 					
 					requestAnimationFrame(animate);
