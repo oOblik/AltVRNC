@@ -27,11 +27,15 @@
 				
 				function loadAssets() {
 					myClock = new NativeComponent('n-text', {
-						fontSize: 100,
-						width: 100,
+						fontSize: 10,
+						width: 10,
 						height: 1,
 						horizontalAlign: 'middle',
 						verticalAlign: 'middle'	
+					}).addTo(root);
+					
+					test = new NativeComponent('n-object', {
+						res: 'effects/fireworks'
 					}).addTo(root);
 					
 					animate();
