@@ -1,20 +1,82 @@
+var NativeComponentDefaults = {
+	'n-object': {
+		res: 'architecture/wall-4w-4h'
+	},
+	'n-spawner': {
+		res: 'interactables/basketball'
+	},
+	'n-text': {
+		text: '',
+		fontSize: 10,
+		width: 10,
+		height: 1,
+		horizontalAlign: 'middle',
+		verticalAlign: 'middle'
+	},
+	'n-sphere-collider': {
+		isTrigger: false,
+		center: { 'x':0, 'y': 0, 'x': 0 },
+		radius: 0,
+		type: 'environment'
+	},
+	'n-box-collider': {
+		isTrigger: false,
+		center: { 'x':0, 'y': 0, 'x': 0 },
+		size: { 'x':0, 'y': 0, 'x': 0 },
+		type: 'environment'
+	},
+	'n-capsule-collider': {
+		isTrigger: false,
+		center: { 'x':0, 'y': 0, 'x': 0 },
+		radius: 0,
+		height: 0,
+		direction: 'y',
+		type: 'environment'
+	},
+	'n-mesh-collider': {
+		isTrigger: false,
+		convex: true,
+		type: 'environment'
+	},
+	'n-billboard': {
+	},
+	'n-container': {
+		capacity: 4,
+	},
+	'n-sound': {
+		on: '',
+		res: '',
+		src: '',
+		loop: false,
+		volume: 1,
+		autoplay: false,
+		oneshot: false,
+		spatialBlend: 1,
+		pitch: 1,
+		minDistance: 1,
+		maxDistance: 12,
+	},
+};
+
 var NativeComponent = function (name, data, _mesh) {
 	this.isInit = false;
-	this.name = name || "n-object";
+	this.name = name || 'n-object';
 	this.data =  data || {};
 
-	var placeholderGeometry = new THREE.BoxGeometry(0.1, 0.1, 0.1);
+	this.data = Object.assign(NativeComponentDefaults[this.name], this.data);
+
+	var placeholderGeometry = new THREE.BoxGeometry(1, 1, 1);
 	var placeholderMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
 	placeholderMaterial.visible = false;
 
 	var PlaceholderMesh = function () {
 		THREE.Mesh.call(this, placeholderGeometry, placeholderMaterial);
 	};
-	
+
 	PlaceholderMesh.prototype = Object.create(THREE.Mesh.prototype);
 	PlaceholderMesh.prototype.constructor = THREE.PlaceholderMesh;
-		
-	if(_mesh && typeof _mesh === "object") {
+
+	if(_mesh && typeof _mesh === 'object') {
 		this.mesh = _mesh;
 	} else {
 		this.mesh = new PlaceholderMesh();
@@ -58,11 +120,14 @@ NativeComponent.prototype.call = function(functionName, functionArguments) {
 };
 
 NativeComponent.prototype.getMesh = function(callback) {
+	
 	callback && callback(this.mesh);
 	return this.mesh;
 };
 
-NativeComponent.prototype.addTo = function(parent) {
+NativeComponent.prototype.addTo = function(parent, callback) {
 	parent.add(this.mesh);
+	
+	callback && callback( this.mesh );
 	return this;
 };
