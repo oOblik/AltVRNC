@@ -5,71 +5,70 @@
 		<script type="text/javascript" src="https://sdk.altvr.com/libs/altspace.js/0.25.0/altspace.min.js"></script>
 		<script type="text/javascript" src="js/JSNativeComponents.js"></script>
 		<script>
-			var TestApp = (function() {
+			var JSNCExamplesApp = (function() {
 				var scene = new THREE.Scene();
 				var renderer = altspace.getThreeJSRenderer();
 				var root = new THREE.Object3D();
-				
-				var myClock;
+
+				var testText;
 				var testCollider;
-				
+				var testSpawner;
+
 				scene.add(root);
-				
+
 				function init() {
 
 					altspace.getEnclosure().then(function(enc) {
 						console.log('Enclosure Data:', enc);
 						root.scale.multiplyScalar(enc.pixelsPerMeter);
-						
+
 						loadAssets();
 					});
 
 				}
-				
+
 				function loadAssets() {
-					myClock = new NativeComponent('n-text', {
+					testText = new NativeComponent('n-text', {
 						fontSize: 10,
-						width: 10,
-						height: 1,
 						horizontalAlign: 'middle',
-						verticalAlign: 'middle'	
 					}).addTo(root);
-					
+
 					var geometry = new THREE.BoxGeometry(5, 5, 5);
 					var material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
 					var testBox = new THREE.Mesh(geometry, material);
 					testBox.position.x = -10;
+					testBox.position.y = -1;
+
+					testCollider = new NativeComponent('n-box-collider', {radius: 2}, testBox).addTo(root);
 					
-					testCollider = new NativeComponent('n-box-collider', {
-						center: THREE.Vector3(0, 0, 0),
-						radius: 0,
-						type: 'environment'
-					}, testBox).addTo(root);
+					testSpawner = new NativeComponent('n-spawner').addTo(root, function(obj){
+						obj.position.x = 10;
+					});
 					
 					animate();
 				}
-				
+
 				function animate() {
-					
+
 					var epochtime = (new Date).getTime();
-					
-					myClock.update({ text: String(epochtime) }, function(obj) {
+
+					testText.update({ text: String(epochtime) }, function(obj) {
 						obj.rotation.y += 0.001;
 					});
-					
+
 					testCollider.getMesh(function(obj) {
 						obj.rotation.y += 0.002;
 					});
-					
+
 					requestAnimationFrame(animate);
 					renderer.render(scene);
 				}
-				
+
 				return { init: init };
 			}());
 			
 			window.onload = function() {
-				TestApp.init();	
+				JSNCExamplesApp.init();	
 			}
 		</script>
 	</head>
