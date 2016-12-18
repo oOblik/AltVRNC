@@ -38,8 +38,6 @@ var NativeComponentDefaults = {
 		convex: true,
 		type: 'environment'
 	},
-	'n-billboard': {
-	},
 	'n-container': {
 		capacity: 4,
 	},
@@ -59,43 +57,38 @@ var NativeComponentDefaults = {
 };
 
 var NativeComponent = function (name, data, _mesh) {
-	this.isInit = false;
 	this.name = name || 'n-object';
-	this.data =  data || {};
+	this.data = data || null;
 
-	this.data = Object.assign(NativeComponentDefaults[this.name], this.data);
-
-	var placeholderGeometry = new THREE.BoxGeometry(1, 1, 1);
-	var placeholderMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-	placeholderMaterial.visible = false;
-
-	var PlaceholderMesh = function () {
-		THREE.Mesh.call(this, placeholderGeometry, placeholderMaterial);
-	};
-
-	PlaceholderMesh.prototype = Object.create(THREE.Mesh.prototype);
-	PlaceholderMesh.prototype.constructor = THREE.PlaceholderMesh;
-
+	if(NativeComponentDefaults[this.name]) {
+		this.data = Object.assign(NativeComponentDefaults[this.name], this.data);
+	}
+	
 	if(_mesh && typeof _mesh === 'object') {
 		this.mesh = _mesh;
-	} else {
-		this.mesh = new PlaceholderMesh();
 	}
 	
 	return this.init();
 };
 
 NativeComponent.prototype.init = function() {
-	if(!this.isInit) {
-		this.mesh.userData.altspace = this.mesh.userData.altspace || {};
-		this.mesh.userData.altspace.collider = this.mesh.userData.altspace.collider || {};
-		this.mesh.userData.altspace.collider.enabled = false;
+	if(!this.mesh) {
+		var geometry = new THREE.BoxGeometry(1, 1, 1);
+		var material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+		material.visible = false;
 
-		altspace.addNativeComponent(this.mesh, this.name);
+		this.mesh = new THREE.Mesh(geometry, material);
+	}
+
+	this.mesh.userData.altspace = this.mesh.userData.altspace || {};
+	this.mesh.userData.altspace.collider = this.mesh.userData.altspace.collider || {};
+	this.mesh.userData.altspace.collider.enabled = false;
+	
+	altspace.addNativeComponent(this.mesh, this.name);
+
+	if(this.data) {
 		this.update(this.data);
 	}
-	
-	this.isInit = true;
 	
 	return this;
 };
@@ -103,6 +96,7 @@ NativeComponent.prototype.init = function() {
 NativeComponent.prototype.remove = function() {
 	altspace.removeNativeComponent(this.mesh, this.name);
 	
+	this.mesh.parent.remove(this.mesh);
 	return this;
 };
 
@@ -110,7 +104,7 @@ NativeComponent.prototype.update = function(oldData, callback) {
 	this.data = Object.assign(this.data, oldData);
 	altspace.updateNativeComponent(this.mesh, this.name, this.data );
 	
-	callback && callback( this.mesh );
+	callback && callback(this.mesh);
 	return this;
 };
 
@@ -120,7 +114,6 @@ NativeComponent.prototype.call = function(functionName, functionArguments) {
 };
 
 NativeComponent.prototype.getMesh = function(callback) {
-	
 	callback && callback(this.mesh);
 	return this.mesh;
 };
@@ -128,6 +121,6 @@ NativeComponent.prototype.getMesh = function(callback) {
 NativeComponent.prototype.addTo = function(parent, callback) {
 	parent.add(this.mesh);
 	
-	callback && callback( this.mesh );
+	callback && callback(this.mesh);
 	return this;
 };
