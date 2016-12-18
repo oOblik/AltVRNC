@@ -3,7 +3,7 @@ var NativeComponent = function (name, data, _mesh) {
 	this.name = name || "n-object";
 	this.data =  data || {};
 
-	var placeholderGeometry = new THREE.BoxGeometry(0.001, 0.001, 0.001);
+	var placeholderGeometry = new THREE.BoxGeometry(0.1, 0.1, 0.1);
 	var placeholderMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
 	placeholderMaterial.visible = false;
 
@@ -15,12 +15,12 @@ var NativeComponent = function (name, data, _mesh) {
 	PlaceholderMesh.prototype.constructor = THREE.PlaceholderMesh;
 		
 	if(_mesh && typeof _mesh === "object") {
-		this.mesh = mesh;
+		this.mesh = _mesh;
 	} else {
 		this.mesh = new PlaceholderMesh();
 	}
 	
-	this.init();
+	return this.init();
 };
 
 NativeComponent.prototype.init = function() {
