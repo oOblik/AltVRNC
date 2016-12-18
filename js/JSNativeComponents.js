@@ -8,10 +8,10 @@ var NativeComponent = function (name, data, _mesh) {
 	placeholderMaterial.visible = false;
 
 	var PlaceholderMesh = function () {
-		THREE.Mesh.call( this, placeholderGeometry, placeholderMaterial );
+		THREE.Mesh.call(this, placeholderGeometry, placeholderMaterial);
 	};
 	
-	PlaceholderMesh.prototype = Object.create( THREE.Mesh.prototype );
+	PlaceholderMesh.prototype = Object.create(THREE.Mesh.prototype);
 	PlaceholderMesh.prototype.constructor = THREE.PlaceholderMesh;
 		
 	if(_mesh && typeof _mesh === "object") {
@@ -57,7 +57,8 @@ NativeComponent.prototype.call = function(functionName, functionArguments) {
 	return this;
 };
 
-NativeComponent.prototype.getMesh = function() {
+NativeComponent.prototype.getMesh = function(callback) {
+	callback && callback(this.mesh);
 	return this.mesh;
 };
 
