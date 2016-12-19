@@ -59,7 +59,9 @@ var NativeComponentDefaults = {
 var NativeComponent = function (name, data, _mesh) {
 	this.name = name || 'n-object';
 	this.data = data || null;
+	this.inClient = (altspace && altspace.inClient);
 
+	
 	if(NativeComponentDefaults[this.name]) {
 		this.data = Object.assign(NativeComponentDefaults[this.name], this.data);
 	}
@@ -84,7 +86,7 @@ NativeComponent.prototype.init = function() {
 	this.mesh.userData.altspace.collider = this.mesh.userData.altspace.collider || {};
 	this.mesh.userData.altspace.collider.enabled = false;
 	
-	altspace.addNativeComponent(this.mesh, this.name);
+	if(this.inClient) altspace.addNativeComponent(this.mesh, this.name);
 
 	if(this.data) {
 		this.update(this.data);
@@ -93,23 +95,24 @@ NativeComponent.prototype.init = function() {
 	return this;
 };
 
-NativeComponent.prototype.remove = function() {
-	altspace.removeNativeComponent(this.mesh, this.name);
+NativeComponent.prototype.remove = function(andMesh) {
+	if(this.inClient) altspace.removeNativeComponent(this.mesh, this.name);
 	
-	this.mesh.parent.remove(this.mesh);
+	if(andMesh) this.mesh.parent.remove(this.mesh);
+	
 	return this;
 };
 
 NativeComponent.prototype.update = function(oldData, callback) {
 	this.data = Object.assign(this.data, oldData);
-	altspace.updateNativeComponent(this.mesh, this.name, this.data );
+	if(this.inClient) altspace.updateNativeComponent(this.mesh, this.name, this.data );
 	
 	callback && callback(this.mesh);
 	return this;
 };
 
 NativeComponent.prototype.call = function(functionName, functionArguments) {
-	altspace.callNativeComponent(this.mesh, this.name, functionName, functionArguments);
+	if(this.inClient) altspace.callNativeComponent(this.mesh, this.name, functionName, functionArguments);
 	return this;
 };
 
