@@ -43,7 +43,7 @@ var NativeComponentDefaults = {
 	},
 	'n-mesh-collider': {
 		isTrigger: false,
-		convex: false,
+		convex: true,
 		type: 'environment'
 	},
 	'n-container': {
@@ -62,37 +62,41 @@ var NativeComponentDefaults = {
 		minDistance: 1,
 		maxDistance: 12,
 	},
+	'n-browser': {
+		url: 'http://www.google.com/',
+		controls: 'hidden'
+	},
 };
 
-var NativeComponent = function (name, data, _mesh) {
-	this.name = name || 'n-object';
+var NativeComponent = function (name, data, _object) {
+	this.name = name.toLowerCase() || 'n-object';
 	this.data = data || null;
 	this.inClient = (altspace && altspace.inClient);
 
-	
 	if(NativeComponentDefaults[this.name]) {
 		this.data = Object.assign({}, NativeComponentDefaults[this.name], this.data);
 	}
 	
-	if(_mesh && _mesh instanceof THREE.Mesh) {
-		this.mesh = _mesh;
+	if(_object && (_object instanceof THREE.Object3D || _object instanceof THREE.Mesh || _object instanceof THREE.Group)) {
+		this.object = _object;
 	} else {
 		var geometry = new THREE.BoxGeometry(1, 1, 1);
 		var material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
 		material.visible = (this.data && this.data.visible) ? true : false;
 
-		this.mesh = new THREE.Mesh(geometry, material);
+		this.object = new THREE.Mesh(geometry, material);
 	}
 	
 	switch(this.name) {
 		case 'n-mesh-collider':
 			var NC = this;
 			
-			this.mesh.traverse(function (childObj) {
+			this.object.traverse(function (childObj) {
 				if (childObj instanceof THREE.Mesh) {
 					NC.init(childObj);
 				}
-			}.bind(this));
+			});
+			return this;
 		break;
 		case 'n-sound':
 			var src = this.data.src;
@@ -108,64 +112,65 @@ var NativeComponent = function (name, data, _mesh) {
 					this.data.src = location.origin + currPath + src;
 				}
 			}
+			
+			return this.init(this.object);
 		break;
 		default:
+			return this.init(this.object);
 	}
-	
-	return this.init(this.mesh);
 };
 
-NativeComponent.prototype.init = function(mesh) {
-	mesh.userData.altspace = mesh.userData.altspace || {};
-	mesh.userData.altspace.collider = mesh.userData.altspace.collider || {};
-	mesh.userData.altspace.collider.enabled = false;
+NativeComponent.prototype.init = function(object) {
+	object.userData.altspace = object.userData.altspace || {};
+	object.userData.altspace.collider = object.userData.altspace.collider || {};
+	object.userData.altspace.collider.enabled = false;
 	
-	if(this.inClient) altspace.addNativeComponent(mesh, this.name);
-	if(this.data) this.update(this.data);
+	if(this.inClient) altspace.addNativeComponent(object, this.name);
+	if(this.data) altspace.updateNativeComponent(object, this.name, this.data);
 	
 	return this;
 };
 
 NativeComponent.prototype.remove = function(andMesh) {
-	if(this.mesh) {
-		if(this.inClient) altspace.removeNativeComponent(this.mesh, this.name);
+	if(this.object) {
+		if(this.inClient) altspace.removeNativeComponent(this.object, this.name);
 		
-		if(andMesh) this.mesh.parent.remove(this.mesh);
+		if(andMesh) this.object.parent.remove(this.object);
 	}
 	return this;
 };
 
-NativeComponent.prototype.update = function(oldData, callback) {
-	if(this.mesh) {
-		this.data = Object.assign({}, this.data, oldData);
-		if(this.inClient) altspace.updateNativeComponent(this.mesh, this.name, this.data );
+NativeComponent.prototype.update = function(newData, callback) {
+	if(this.object) {
+		this.data = Object.assign({}, this.data, newData);
+		if(this.inClient) altspace.updateNativeComponent(this.object, this.name, this.data );
 		
-		callback && callback(this.mesh);
+		callback && callback(this.object);
 	}
 	return this;
 };
 
 NativeComponent.prototype.call = function(functionName, functionArguments) {
-	if(this.mesh) {
-		if(this.inClient) altspace.callNativeComponent(this.mesh, this.name, functionName, functionArguments);
-	
-		callback && callback(this.mesh);
+	if(this.object) {
+		if(this.inClient) altspace.callNativeComponent(this.object, this.name, functionName, functionArguments);
+		
+		callback && callback(this.object);
 	}
 	return this;
 };
 
-NativeComponent.prototype.getMesh = function(callback) {
-	if(!this.mesh) return false;
+NativeComponent.prototype.getObject = function(callback) {
+	if(!this.object) return false;
 	
-	callback && callback(this.mesh);
-	return this.mesh;
+	callback && callback(this.object);
+	return this.object;
 };
 
 NativeComponent.prototype.addTo = function(parent, callback) {
-	if(this.mesh) {
-		parent.add(this.mesh);
+	if(this.object) {
+		parent.add(this.object);
 		
-		callback && callback(this.mesh);
+		callback && callback(this.object);
 	}
 	return this;
 };
