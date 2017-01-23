@@ -150,7 +150,7 @@ NativeComponent.prototype.update = function(newData, callback) {
 	return this;
 };
 
-NativeComponent.prototype.call = function(functionName, functionArguments) {
+NativeComponent.prototype.call = function(functionName, functionArguments, callback) {
 	if(this.object) {
 		if(this.inClient) altspace.callNativeComponent(this.object, this.name, functionName, functionArguments);
 		
