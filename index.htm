@@ -1,42 +1,88 @@
 <html>
 	<head>
 		<title>AltspaceVR Native Components in JS</title>
+		<style>
+			html, body {
+				width: 100%;
+				height: 100%;
+			}
+			body {
+				text-align: center;
+				margin: 0;
+				overflow: hidden;
+			}
+			canvas {
+				margin-left: auto;
+				margin-right: auto;
+			}
+		</style>
 		<script type="text/javascript" src="https://cdn.rawgit.com/mrdoob/three.js/dev/build/three.js"></script>
 		<script type="text/javascript" src="https://sdk.altvr.com/libs/altspace.js/0.25.0/altspace.min.js"></script>
 		<script type="text/javascript" src="js/JSNativeComponents.js"></script>
 		<script>
 			var JSNCExamplesApp = (function() {
+				var renderer;
+				var camera;
 				var scene = new THREE.Scene();
-				var renderer = altspace.getThreeJSRenderer();
 				var root = new THREE.Object3D();
 
+				var isMobile = (/Mobile/i.test(navigator.userAgent)) ? true : false;
+				
 				var testText;
 				var testBoxCollider;
 
 				scene.add(root);
 
 				function init() {
+					if(altspace && altspace.inClient) {
+						renderer = altspace.getThreeJSRenderer({initialSerializationBufferSize: 640000});
 
-					altspace.getEnclosure().then(function(enc) {
-						console.log('Enclosure Data:', enc);
-						root.scale.multiplyScalar(enc.pixelsPerMeter);
-						
-						enc.requestFullspace().then(function() {
-							loadAssets();
+						altspace.getEnclosure().then(function(enc) {
+							console.log('Enclosure Data:', enc);
+							root.scale.multiplyScalar(enc.pixelsPerMeter);
+
+							enc.requestFullspace().then(function() {
+								loadAssets();
+							});
 						});
-					});
+					} else {
+						renderer = new THREE.WebGLRenderer();
+						renderer.setClearColor( 0xffffff );
+						renderer.setPixelRatio( window.devicePixelRatio );
+						renderer.setSize( window.innerWidth, window.innerHeight );
+						document.body.appendChild(renderer.domElement);
+
+						window.addEventListener( 'resize', onWindowResize, false );
+
+						camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 10000);
+						camera.position.set(5, 5, 0);
+						camera.updateProjectionMatrix();
+						camera.lookAt( new THREE.Vector3(0, 0, 0) );
+						root.add(camera);
+
+						root.add(new THREE.AmbientLight(0xffffff));
+
+						altspace.utilities.shims.cursor.init(scene, camera, {renderer: renderer});
+					}
 
 				}
 
+				function onWindowResize() {
+					camera.aspect = window.innerWidth / window.innerHeight;
+					camera.updateProjectionMatrix();
+					renderer.setSize(window.innerWidth, window.innerHeight);
+				}
+
 				function loadAssets() {
-					
+
+				
 					//n-text
 					testText = new NativeComponent('n-text', {
 						fontSize: 10,
 						horizontalAlign: 'middle',
 					}).addTo(root);
-					
-					
+
+
 					//n-sphere-collider
 					var geometry = new THREE.SphereGeometry(3, 20, 20);
 					var material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
@@ -44,6 +90,7 @@
 					testSphere.position.set(-10, 0, 10);
 
 					var testSphereCollider = new NativeComponent('n-sphere-collider', {radius: 3}, testSphere).addTo(root);
+
 					
 					//n-box-collider
 					var geometry = new THREE.BoxGeometry(5, 5, 5);
@@ -52,11 +99,13 @@
 					testBox.position.set(-10, 0, 0);
 
 					testBoxCollider = new NativeComponent('n-box-collider', {radius: 1}, testBox).addTo(root);
+
 					
 					//n-spawner
 					var testSpawner = new NativeComponent('n-spawner').addTo(root, function(obj){
 						obj.position.set(5, 0, 0);
 					});
+
 					
 					//n-object (effects)
 					var geometry = new THREE.BoxGeometry(1, 1, 1);
@@ -64,25 +113,46 @@
 					var exBox = new THREE.Mesh(geometry, material);
 					exBox.position.set(0, 5, 0);
 					root.add(exBox);
-					
+
 					exBox.addEventListener('cursorup', function() {
 						var explosion = new NativeComponent('n-object', {
 							res: 'effects/explosion'
 						}).addTo(exBox);
-						setTimeout(function() { 
+						setTimeout(function() {
 							explosion.remove();
 							explosion = null;
 						}, 5000);
 					});
-					
-					
+
+
 					//n-billboard
 					var geometry = new THREE.PlaneGeometry(5, 5);
 					var material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
 					var testPlane = new THREE.Mesh(geometry, material);
 					testPlane.position.set(-10, 0, 20);
-					
+
 					var testBillboard = new NativeComponent('n-billboard', null, testPlane).addTo(root);
+					
+					
+					//n-sound
+					var audioFile = (isMobile) ? 'test.mp3' : 'test.ogg';
+					
+					var testSound = new NativeComponent('n-sound', {
+						autoplay: true,
+						loop: false,
+						src: 'audio/' + audioFile,
+						volume: 0.5,
+						minDistance: 50,
+						maxDistance: 200
+					}).addTo(root);
+					
+					var testSoundCalls = function () {
+						testSound.call('pause');
+						testSound.call('seek', {time: 0});
+						testSound.call('play');
+					};
+					
+					setInterval(testSoundCalls, 5000);
 					
 					animate();
 				}
@@ -100,14 +170,14 @@
 					});
 
 					requestAnimationFrame(animate);
-					renderer.render(scene);
+					renderer.render(scene, camera);
 				}
 
 				return { init: init };
 			}());
-			
+
 			window.onload = function() {
-				JSNCExamplesApp.init();	
+				JSNCExamplesApp.init();
 			}
 		</script>
 	</head>
