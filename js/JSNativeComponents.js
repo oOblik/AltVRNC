@@ -13,6 +13,12 @@ var NativeComponentDefaults = {
 		horizontalAlign: 'middle',
 		verticalAlign: 'middle'
 	},
+	'n-collider': {
+		center: {
+			'x': 0, 'y': 0, 'x': 0
+		},
+		type: 'environment'
+	},
 	'n-sphere-collider': {
 		isTrigger: false,
 		center: {
@@ -47,7 +53,7 @@ var NativeComponentDefaults = {
 		type: 'environment'
 	},
 	'n-container': {
-		capacity: 4,
+		capacity: 4
 	},
 	'n-sound': {
 		on: '',
@@ -60,12 +66,16 @@ var NativeComponentDefaults = {
 		spatialBlend: 1,
 		pitch: 1,
 		minDistance: 1,
-		maxDistance: 12,
+		maxDistance: 12
 	},
-	'n-browser': {
-		url: 'http://www.google.com/',
-		controls: null
+	'n-skeleton-parent': {
+		part: 'head',
+		side: 'center',
+		index: 0,
+		userId: null
 	},
+	'n-cockpit-parent': null,
+	'n-billboard': null
 };
 
 var NativeComponent = function (name, data, _object) {
@@ -75,6 +85,8 @@ var NativeComponent = function (name, data, _object) {
 
 	if(NativeComponentDefaults[this.name]) {
 		this.data = Object.assign({}, NativeComponentDefaults[this.name], this.data);
+	} else {
+		this.data = null;
 	}
 	
 	if(_object && (_object instanceof THREE.Object3D || _object instanceof THREE.Mesh || _object instanceof THREE.Group)) {

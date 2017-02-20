@@ -75,7 +75,6 @@
 
 				function loadAssets() {
 
-				
 					//n-text
 					testText = new NativeComponent('n-text', {
 						fontSize: 10,
@@ -153,6 +152,23 @@
 					};
 					
 					setInterval(testSoundCalls, 5000);
+					
+					
+					//n-skeleton-parent
+					var geometry = new THREE.CubeGeometry(0.5, 0.5, 0.5);
+					var material = new THREE.MeshBasicMaterial({ color: 0xff0000, opacity: 0.7, transparent: true });
+					var objSkelParent = new THREE.Mesh(geometry, material);
+					objSkelParent.position.set(0, 0.5, 0);
+					var testSkeletonParent = new NativeComponent('n-skeleton-parent', {part: 'head'}, objSkelParent).addTo(root);
+					
+					
+					//n-cockpit-parent
+					var geometry = new THREE.PlaneGeometry(0.08, 0.08);
+					var material = new THREE.MeshBasicMaterial({ color: 0xff0000, opacity: 0.7, transparent: true });
+					var objCockpitParent = new THREE.Mesh(geometry, material);
+					objCockpitParent.position.set(0.1, 0, -1);
+					var testCockpitParent = new NativeComponent('n-cockpit-parent', null, objCockpitParent).addTo(root);
+					
 					
 					animate();
 				}
