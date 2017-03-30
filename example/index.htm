@@ -16,8 +16,8 @@
 				margin-right: auto;
 			}
 		</style>
-		<script type="text/javascript" src="https://cdn.rawgit.com/mrdoob/three.js/dev/build/three.js"></script>
-		<script type="text/javascript" src="https://sdk.altvr.com/libs/altspace.js/0.25.0/altspace.min.js"></script>
+		<script type="text/javascript" src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.js"></script>
+		<script type="text/javascript" src="https://sdk.altvr.com/libs/altspace.js/1.0.0/altspace.min.js"></script>
 		<script type="text/javascript" src="js/JSNativeComponents.js"></script>
 		<script>
 			var JSNCExamplesApp = (function() {
@@ -169,6 +169,27 @@
 					objCockpitParent.position.set(0.1, 0, -1);
 					var testCockpitParent = new NativeComponent('n-cockpit-parent', null, objCockpitParent).addTo(root);
 					
+					//n-portal
+					var quaternion = new THREE.Quaternion();
+					quaternion.setFromEuler(new THREE.Euler(90 * (Math.PI / 180), 0 * (Math.PI / 180), 90 * (Math.PI / 180)));
+					quaternion.normalize();
+
+					var testPortal = new NativeComponent('n-portal', { 
+						targetPosition: { x: 15 , y: 10, z: 15 },
+						targetQuaternion: { x: 0, y: 0, z: 0, w: 0}
+					}).addTo(root, function(obj){
+						obj.position.set(15, 0, 15);
+					});
+					
+					//n-layout-browser
+					var geometry = new THREE.BoxGeometry(1, 1, 1);
+					var objBrowser = new THREE.Mesh(geometry);
+					objBrowser.scale.set(10, 10, 10);
+					objBrowser.position.set(20, 0, 20);
+					
+					var testBrowser = new NativeComponent('n-layout-browser', { 
+						url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+					}, objBrowser).addTo(root);
 					
 					animate();
 				}
@@ -177,7 +198,7 @@
 
 					var epochtime = (new Date).getTime();
 
-					testText.update({ text: String(epochtime) }, function(obj) {
+					testText.update({ text: '<mspace=2.25em><color=#FF00FFCC>'+String(epochtime) }, function(obj) {
 						obj.rotation.y += 0.001;
 					});
 
