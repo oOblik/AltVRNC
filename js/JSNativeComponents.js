@@ -15,14 +15,14 @@ var NativeComponentDefaults = {
 	},
 	'n-collider': {
 		center: {
-			'x': 0, 'y': 0, 'x': 0
+			'x': 0, 'y': 0, 'z': 0
 		},
 		type: 'environment'
 	},
 	'n-sphere-collider': {
 		isTrigger: false,
 		center: {
-			'x': 0, 'y': 0, 'x': 0
+			'x': 0, 'y': 0, 'z': 0
 		},
 		radius: 0,
 		type: 'environment'
@@ -30,17 +30,17 @@ var NativeComponentDefaults = {
 	'n-box-collider': {
 		isTrigger: false,
 		center: {
-			'x': 0, 'y': 0, 'x': 0
+			'x': 0, 'y': 0, 'z': 0
 		},
 		size: { 
-			'x': 0, 'y': 0, 'x': 0
+			'x': 0, 'y': 0, 'z': 0
 		},
 		type: 'environment'
 	},
 	'n-capsule-collider': {
 		isTrigger: false,
 		center: { 
-			'x': 0, 'y': 0, 'x': 0
+			'x': 0, 'y': 0, 'z': 0
 		},
 		radius: 0,
 		height: 0,
@@ -83,15 +83,15 @@ var NativeComponentDefaults = {
 	'n-portal': {
 		targetSpace: null, // defaults to current space when omited
 		targetPosition: {
-			'x': 0, 'y': 0, 'x': 0 
+			'x': 0, 'y': 0, 'z': 0 
 		},
 		targetQuaternion: { 
-			'x': 0, 'y': 0, 'x': 0, 'w': 0 
+			'x': 0, 'y': 0, 'z': 0, 'w': 0 
 		}
 	}
 };
 
-function parseURL(url) {
+function parseAbsURL(url) {
 	var retVal = '';
 	
 	if (url && !url.startsWith('http')) {
@@ -143,12 +143,12 @@ var NativeComponent = function (name, data, _object) {
 			return this;
 		break;
 		case 'n-sound':
-			this.data.src = parseURL(this.data.src);
+			this.data.src = parseAbsURL(this.data.src);
 			return this.init(this.object);
 		break;
 		case 'n-layout-browser':
 			this.data.is3d = this.data.isEnclosure; // Deprecated
-			this.data.url = parseURL(this.data.url);
+			this.data.url = parseAbsURL(this.data.url);
 			return this.init(this.object);
 		break;
 		default:
