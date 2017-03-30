@@ -1,10 +1,10 @@
-# AltspaceVR Native Components JS
-A JavaScript library for using AltspaceVR's native components.
+# AltspaceVR Native Components
+A JavaScript library for using AltspaceVR's native a-frame components.
 
 ### <b>Resources</b>
 [Native Resources](https://altspacevr.github.io/aframe-altspace-component/doc/resources.html)<br>
 [Native Component In-Depth Reference](https://altspacevr.github.io/aframe-altspace-component/doc/native.html)<br>
-[Rich-Text Formatting Reference](http://digitalnativestudios.com/textmeshpro/docs/rich-text/)<br>
+[TextMesh Pro Rich Text Formatting Reference](http://digitalnativestudios.com/textmeshpro/docs/rich-text/)<br>
 
 ### <b>Components</b>
 
@@ -211,8 +211,6 @@ Currently untested and unsupported.
 
 ### <a name="n-text">n-text</a>
 
-[Rich-Text Formatting Reference](http://digitalnativestudios.com/textmeshpro/docs/rich-text/)
-
 #### Default Configuration
 <blockquote>
 	text: ''<br>
@@ -229,6 +227,9 @@ var config = { text: 'Hello World!', fontSize: 10, horizontalAlign: 'middle' };
 
 var testText = new NativeComponent('n-text', config).addTo(scene);
 ```
+#### Notes
+
+Reference for styling, coloring, and formatting text can be found here: [TextMesh Pro Rich Text Formatting Reference](http://digitalnativestudios.com/textmeshpro/docs/rich-text/) 
 
 ---
 
@@ -292,7 +293,7 @@ setInterval(testSoundCalls, 5000);
 
 #### Default Configuration
 <blockquote>
-	targetSpace: null  //Current Space if NULL<br>
+	targetSpace: null<br>
 	targetPosition: { 'x': 0, 'y': 0, 'z': 0 }<br>
 	targetQuaternion: { 'x': 0, 'y': 0, 'z': 0, 'w': 0 }<br>
 </blockquote>
@@ -307,12 +308,13 @@ var config = {
 
 var testText = new NativeComponent('n-portal', config).addTo(scene);
 ```
+#### Notes
+
+If <b>targetSpace</b> is null, the portal will teleport the user within the current space using <b>targetPosition</b> and <b>targetQuaternion</b>.
 
 ---
 
 ### <a name="n-layout-browser">n-layout-browser</a>
-
-Note that due to Altspace limitations this will only spawn the enclosure once on the first creation of the space and it will persist for the lifetime of the space.
 
 #### Default Configuration
 <blockquote>
@@ -336,5 +338,8 @@ var config = {
 
 var testText = new NativeComponent('n-layout-browser', dummyMesh).addTo(scene);
 ```
+#### Notes
+
+Due to AltspaceVR's limitations this will only spawn the enclosure once on the first creation of the space and it will persist for the lifetime of the space.
 
 ---
