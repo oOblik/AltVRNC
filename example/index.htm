@@ -17,8 +17,8 @@
 			}
 		</style>
 		<script type="text/javascript" src="https://cdn.rawgit.com/mrdoob/three.js/r84/build/three.js"></script>
-		<script type="text/javascript" src="https://sdk.altvr.com/libs/altspace.js/1.0.0/altspace.min.js"></script>
-		<script type="text/javascript" src="js/JSNativeComponents.js"></script>
+		<script type="text/javascript" src="https://sdk.altvr.com/libs/altspace.js/2.2.0/altspace.min.js"></script>
+		<script type="text/javascript" src="../dist/AltVRNC.js"></script>
 		<script>
 			var JSNCExamplesApp = (function() {
 				var renderer;
@@ -175,8 +175,7 @@
 					quaternion.normalize();
 
 					var testPortal = new NativeComponent('n-portal', { 
-						targetPosition: { x: 15 , y: 10, z: 15 },
-						targetQuaternion: { x: 0, y: 0, z: 0, w: 0}
+						targetPosition: { x: 15 , y: 10, z: 15 }
 					}).addTo(root, function(obj){
 						obj.position.set(15, 0, 15);
 					});
