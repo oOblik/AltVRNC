@@ -75,8 +75,40 @@ var NativeComponentDefaults = {
 		userId: null
 	},
 	'n-cockpit-parent': null,
-	'n-billboard': null
+	'n-billboard': null,
+	'n-layout-browser': {
+		url: 'about:blank',
+		isEnclosure: false
+	},
+	'n-portal': {
+		targetSpace: null, // defaults to current space when omited
+		targetPosition: {
+			'x': 0, 'y': 0, 'x': 0 
+		},
+		targetQuaternion: { 
+			'x': 0, 'y': 0, 'x': 0, 'w': 0 
+		}
+	}
 };
+
+function parseURL(url) {
+	var retVal = '';
+	
+	if (url && !url.startsWith('http')) {
+		if (url.startsWith('/')) {
+			retVal = location.origin + url;
+		}
+		else {
+			var currPath = location.pathname;
+			if (!currPath.endsWith('/')) {
+				currPath = location.pathname.split('/').slice(0, -1).join('/') + '/';
+			}
+			retVal = location.origin + currPath + url;
+		}
+	}
+	
+	return retVal;
+}
 
 var NativeComponent = function (name, data, _object) {
 	this.name = name.toLowerCase() || 'n-object';
@@ -111,20 +143,12 @@ var NativeComponent = function (name, data, _object) {
 			return this;
 		break;
 		case 'n-sound':
-			var src = this.data.src;
-			if (src && !src.startsWith('http')) {
-				if (src.startsWith('/')) {
-					this.data.src = location.origin + src;
-				}
-				else {
-					var currPath = location.pathname;
-					if (!currPath.endsWith('/')) {
-						currPath = location.pathname.split('/').slice(0, -1).join('/') + '/';
-					}
-					this.data.src = location.origin + currPath + src;
-				}
-			}
-			
+			this.data.src = parseURL(this.data.src);
+			return this.init(this.object);
+		break;
+		case 'n-layout-browser':
+			this.data.is3d = this.data.isEnclosure; // Deprecated
+			this.data.url = parseURL(this.data.url);
 			return this.init(this.object);
 		break;
 		default:
