@@ -1,17 +1,32 @@
 # AltspaceVR Native Components JS
-A JavaScript library for using Altspace's native components.
+A JavaScript library for using AltspaceVR's native components.
 
-## Supported Components
-[Native Resources](https://altspacevr.github.io/aframe-altspace-component/doc/resources.html)
+### <b>Resources</b>
+[Native Resources](https://altspacevr.github.io/aframe-altspace-component/doc/resources.html)<br>
+[Native Component In-Depth Reference](https://altspacevr.github.io/aframe-altspace-component/doc/native.html)<br>
+[Rich-Text Formatting Reference](http://digitalnativestudios.com/textmeshpro/docs/rich-text/)<br>
 
-[Native Component In-Depth Reference](https://altspacevr.github.io/aframe-altspace-component/doc/native.html)
+### <b>Components</b>
 
-**All config options below are the default values.**
+* [n-object](#n-object)<br>
+* [n-box-collider](#n-box-collider)<br>
+* [n-sphere-collider](#n-sphere-collider)<br>
+* [n-capsule-collider](#n-capsule-collider)<br>
+* [n-mesh-collider](#n-mesh-collider)<br>
+* [n-spawner](#n-spawner)<br>
+* [n-skeleton-parent](#n-skeleton-parent)<br>
+* [n-cockpit-parent](#n-cockpit-parent)<br>
+* [n-container](#n-container)<br>
+* [n-text](#n-text)<br>
+* [n-billboard](#n-billboard)<br>
+* [n-sound](#n-sound)<br>
+* [n-portal](#n-portal)<br>
+* [n-layout-browser](#n-layout-browser)<br>
 
 ---
 
-### n-object
-#### Config
+### <a name="n-object">n-object</a>
+#### Default Configuration
 <blockquote>
 	res: 'architecture/wall-4w-4h'<br>
 </blockquote>
@@ -27,8 +42,8 @@ var explosion = new NativeComponent('n-object', config).addTo(scene);
 
 ---
 
-### n-box-collider
-#### Config
+### <a name="n-box-collider">n-box-collider</a>
+#### Default Configuration
 <blockquote>
 	center: { 'x': 0, 'y': 0, 'z': 0 }<br>
 	size: { 'x': 0, 'y': 0, 'z': 0 }<br>
@@ -51,8 +66,8 @@ var testBoxCollider = new NativeComponent('n-box-collider', config, testBox).add
 
 ---
 
-### n-sphere-collider
-#### Config
+### <a name="n-sphere-collider">n-sphere-collider</a>
+#### Default Configuration
 <blockquote>
 	center: {  'x': 0, 'y': 0, 'z': 0  }<br>
 	radius: 0<br>
@@ -75,8 +90,8 @@ var testSphereCollider = new NativeComponent('n-sphere-collider', config, testSp
 
 ---
 
-### n-capsule-collider
-#### Config
+### <a name="n-capsule-collider">n-capsule-collider</a>
+#### Default Configuration
 <blockquote>
 	center: { 'x': 0, 'y': 0, 'z': 0 }<br>
 	radius: 0<br>
@@ -87,7 +102,7 @@ var testSphereCollider = new NativeComponent('n-sphere-collider', config, testSp
 
 #### Example
 ```javascript
-var testSphere = new THREE.Mesh(
+var testMesh = new THREE.Mesh(
 	new THREE.CubeGeometry(1, 3, 1), 
 	new THREE.MeshBasicMaterial({ color: 0xff0000 })
 );
@@ -96,32 +111,13 @@ var config = {
 	radius: 3 
 };
 
-var testSphereCollider = new NativeComponent('n-capsule-collider', config, testSphere).addTo(scene);
+var testSphereCollider = new NativeComponent('n-capsule-collider', config, testMesh).addTo(scene);
 ```
 
 ---
 
-### n-spawner
-#### Config
-<blockquote>
-	res: 'interactables/basketball'
-</blockquote>
-
-#### Example
-```javascript
-var config = { 
-	res: 'interactables/basketball' 
-};
-
-var testSpawner = new NativeComponent('n-spawner', config).addTo(scene, function(obj) {
-	obj.position.set(0, 1, 0);
-});
-```
-
----
-
-### n-mesh-collider
-#### Config
+### <a name="n-mesh-collider">n-mesh-collider</a>
+#### Default Configuration
 <blockquote>
 	convex: true<br>
 	type: 'environment'<br>
@@ -144,9 +140,28 @@ var testMeshCollider = new NativeComponent('n-mesh-collider', config, testMesh).
 
 ---
 
-### n-skeleton-parent
+### <a name="n-spawner">n-spawner</a>
+#### Default Configuration
+<blockquote>
+	res: 'interactables/basketball'
+</blockquote>
 
-#### Config
+#### Example
+```javascript
+var config = { 
+	res: 'interactables/basketball' 
+};
+
+var testSpawner = new NativeComponent('n-spawner', config).addTo(scene, function(obj) {
+	obj.position.set(0, 1, 0);
+});
+```
+
+---
+
+### <a name="n-skeleton-parent">n-skeleton-parent</a>
+
+#### Default Configuration
 <blockquote>
 	part: 'head'<br>
 	side: 'center'<br>
@@ -172,8 +187,8 @@ var testSkeletonParent = new NativeComponent('n-skeleton-parent', config, objSke
 
 ---
 
-### n-cockpit-parent
-#### Config
+### <a name="n-cockpit-parent">n-cockpit-parent</a>
+#### Default Configuration
 	N/A
 #### Example
 ```javascript
@@ -189,16 +204,16 @@ var testCockpitParent = new NativeComponent('n-cockpit-parent', null, objCockpit
 
 ---
 
-### n-container
+### <a name="n-container">n-container</a>
 Currently untested and unsupported.
 
 ---
 
-### n-text
+### <a name="n-text">n-text</a>
 
 [Rich-Text Formatting Reference](http://digitalnativestudios.com/textmeshpro/docs/rich-text/)
 
-#### Config
+#### Default Configuration
 <blockquote>
 	text: ''<br>
 	fontSize: 10<br>
@@ -217,8 +232,8 @@ var testText = new NativeComponent('n-text', config).addTo(scene);
 
 ---
 
-### n-billboard
-#### Config
+### <a name="n-billboard">n-billboard</a>
+#### Default Configuration
 	N/A
 #### Example
 
@@ -233,8 +248,8 @@ var testBillboard = new NativeComponent('n-billboard', null, testPlane).addTo(sc
 
 ---
 
-### n-sound
-#### Config
+### <a name="n-sound">n-sound</a>
+#### Default Configuration
 <blockquote>
 	res: ''<br>
 	src: ''<br>
@@ -273,9 +288,9 @@ setInterval(testSoundCalls, 5000);
 
 ---
 
-### n-portal
+### <a name="n-portal">n-portal</a>
 
-#### Config
+#### Default Configuration
 <blockquote>
 	targetSpace: null  //Current Space if NULL<br>
 	targetPosition: { 'x': 0, 'y': 0, 'z': 0 }<br>
@@ -295,11 +310,11 @@ var testText = new NativeComponent('n-portal', config).addTo(scene);
 
 ---
 
-### n-layout-browser
+### <a name="n-layout-browser">n-layout-browser</a>
 
 Note that due to Altspace limitations this will only spawn the enclosure once on the first creation of the space and it will persist for the lifetime of the space.
 
-#### Config
+#### Default Configuration
 <blockquote>
 	url: 'about:blank'<br>
 	isEnclosure: false<br>
@@ -307,12 +322,19 @@ Note that due to Altspace limitations this will only spawn the enclosure once on
 
 #### Example
 ```javascript
+var dummyMesh = new THREE.Mesh(
+	new THREE.CubeGeometry(1, 1, 1)
+);
+
+dummyMesh.position.set(0, 5, 0);
+dummyMesh.scale.set(10, 10, 10);
+
 var config = {
 	url: 'https://www.google.com',
 	isEnclosure: true
 };
 
-var testText = new NativeComponent('n-layout-browser', config).addTo(scene);
+var testText = new NativeComponent('n-layout-browser', dummyMesh).addTo(scene);
 ```
 
 ---
