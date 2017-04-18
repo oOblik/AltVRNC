@@ -151,7 +151,7 @@
 						testSound.call('play');
 					};
 					
-					setInterval(testSoundCalls, 5000);
+					//setInterval(testSoundCalls, 5000);
 					
 					
 					//n-skeleton-parent
@@ -186,9 +186,12 @@
 					objBrowser.scale.set(10, 10, 10);
 					objBrowser.position.set(20, 0, 20);
 					
-					var testBrowser = new NativeComponent('n-layout-browser', { 
-						url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
-					}, objBrowser).addTo(root);
+					var testBrowser = new NativeComponent('n-layout-browser', {
+						url: 'https://video-jukebox.firebaseapp.com/'
+					}, objBrowser).addTo(root, function () {
+						scene.userData.altspace = scene.userData.altspace || {};
+						scene.userData.altspace.initialized = true;
+					});
 					
 					animate();
 				}

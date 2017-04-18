@@ -92,7 +92,7 @@ var NativeComponentDefaults = {
 };
 
 function parseAbsURL(url) {
-	var retVal = '';
+	var retVal = url;
 	
 	if (url && !url.startsWith('http')) {
 		if (url.startsWith('/')) {
@@ -114,7 +114,7 @@ var NativeComponent = function (name, data, _object) {
 	this.name = name.toLowerCase() || 'n-object';
 	this.data = data || null;
 	this.inClient = (altspace && altspace.inClient);
-
+	
 	if(NativeComponentDefaults[this.name]) {
 		this.data = Object.assign({}, NativeComponentDefaults[this.name], this.data);
 	} else {
@@ -149,6 +149,7 @@ var NativeComponent = function (name, data, _object) {
 		case 'n-layout-browser':
 			this.data.is3d = this.data.isEnclosure; // Deprecated
 			this.data.url = parseAbsURL(this.data.url);
+			
 			return this.init(this.object);
 		break;
 		default:

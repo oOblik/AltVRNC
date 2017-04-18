@@ -336,7 +336,13 @@ var config = {
 	isEnclosure: true
 };
 
-var testText = new NativeComponent('n-layout-browser', dummyMesh).addTo(scene);
+var testText = new NativeComponent('n-layout-browser', dummyMesh).addTo(root, function () {
+	//Required for now, should be done only once after all other enclosures have been added.
+	scene.userData.altspace = scene.userData.altspace || {};
+	scene.userData.altspace.initialized = true;
+});
+
+
 ```
 #### Notes
 
