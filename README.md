@@ -22,6 +22,7 @@ A JavaScript library for using AltspaceVR's native a-frame components.
 * [n-sound](#n-sound)<br>
 * [n-portal](#n-portal)<br>
 * [n-layout-browser](#n-layout-browser)<br>
+* [n-gltf](#n-gltf)<br>
 
 ---
 
@@ -33,8 +34,8 @@ A JavaScript library for using AltspaceVR's native a-frame components.
 
 #### Example
 ```javascript
-var config = { 
-	res: 'effects/explosion' 
+var config = {
+	res: 'effects/explosion'
 };
 
 var explosion = new NativeComponent('n-object', config).addTo(scene);
@@ -53,11 +54,11 @@ var explosion = new NativeComponent('n-object', config).addTo(scene);
 #### Example
 ```javascript
 var testBox = new THREE.Mesh(
-	new THREE.CubeGeometry(5, 5, 5), 
+	new THREE.CubeGeometry(5, 5, 5),
 	new THREE.MeshBasicMaterial({ color: 0xff0000 })
 );
 
-var config = { 
+var config = {
 	size: { 'x': 3, 'y': 3, 'z': 3 }
 };
 
@@ -77,12 +78,12 @@ var testBoxCollider = new NativeComponent('n-box-collider', config, testBox).add
 #### Example
 ```javascript
 var testSphere = new THREE.Mesh(
-	new THREE.SphereGeometry(3, 10, 10), 
+	new THREE.SphereGeometry(3, 10, 10),
 	new THREE.MeshBasicMaterial({ color: 0xff0000 })
 );
 
-var config = { 
-	radius: 3 
+var config = {
+	radius: 3
 };
 
 var testSphereCollider = new NativeComponent('n-sphere-collider', config, testSphere).addTo(scene);
@@ -103,12 +104,12 @@ var testSphereCollider = new NativeComponent('n-sphere-collider', config, testSp
 #### Example
 ```javascript
 var testMesh = new THREE.Mesh(
-	new THREE.CubeGeometry(1, 3, 1), 
+	new THREE.CubeGeometry(1, 3, 1),
 	new THREE.MeshBasicMaterial({ color: 0xff0000 })
 );
 
-var config = { 
-	radius: 3 
+var config = {
+	radius: 3
 };
 
 var testSphereCollider = new NativeComponent('n-capsule-collider', config, testMesh).addTo(scene);
@@ -126,11 +127,11 @@ var testSphereCollider = new NativeComponent('n-capsule-collider', config, testM
 #### Example
 ```javascript
 var testMesh = new THREE.Mesh(
-	new THREE.SphereGeometry(3, 10, 10), 
+	new THREE.SphereGeometry(3, 10, 10),
 	new THREE.MeshBasicMaterial({ color: 0xff0000 })
 );
 
-var config = { 
+var config = {
 	convex: true,
 	type: 'environment'
 };
@@ -148,8 +149,8 @@ var testMeshCollider = new NativeComponent('n-mesh-collider', config, testMesh).
 
 #### Example
 ```javascript
-var config = { 
-	res: 'interactables/basketball' 
+var config = {
+	res: 'interactables/basketball'
 };
 
 var testSpawner = new NativeComponent('n-spawner', config).addTo(scene, function(obj) {
@@ -229,7 +230,7 @@ var testText = new NativeComponent('n-text', config).addTo(scene);
 ```
 #### Notes
 
-Reference for styling, coloring, and formatting text can be found here: [TextMesh Pro Rich Text Formatting Reference](http://digitalnativestudios.com/textmeshpro/docs/rich-text/) 
+Reference for styling, coloring, and formatting text can be found here: [TextMesh Pro Rich Text Formatting Reference](http://digitalnativestudios.com/textmeshpro/docs/rich-text/)
 
 ---
 
@@ -349,3 +350,22 @@ var testEnclosure = new NativeComponent('n-layout-browser', dummyMesh).addTo(roo
 Due to AltspaceVR's limitations this will only spawn the enclosure once on the first creation of the space and it will persist for the lifetime of the space.
 
 ---
+
+### <a name="n-gltf">n-gltf</a>
+
+#### Default Configuration
+<blockquote>
+	url: null<br>
+	sceneIndex: 0<br>
+</blockquote>
+
+#### Example
+```javascript
+var config = {
+	url: 'https://rawgit.com/KhronosGroup/glTF-Sample-Models/master/2.0/DamagedHelmet/glTF-Binary/DamagedHelmet.glb'
+};
+
+var testGLTFModel = new NativeComponent('n-gltf', config).addTo(scene);
+
+
+```

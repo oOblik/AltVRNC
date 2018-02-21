@@ -88,6 +88,10 @@ var NativeComponentDefaults = {
 		targetQuaternion: { 
 			'x': 0, 'y': 0, 'z': 0, 'w': 0 
 		}
+	},
+	'n-gltf': {
+		url: '',
+		sceneIndex: 0
 	}
 };
 
@@ -151,6 +155,10 @@ var NativeComponent = function (name, data, _object) {
 			this.data.url = parseAbsURL(this.data.url);
 			
 			return this.init(this.object);
+		break;
+		case 'n-gltf':
+			this.data.url = parseAbsURL(this.data.url);
+			this.init(this.object);
 		break;
 		default:
 			return this.init(this.object);
