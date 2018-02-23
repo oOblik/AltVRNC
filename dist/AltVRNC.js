@@ -135,34 +135,29 @@ var NativeComponent = function (name, data, _object) {
 		this.object = new THREE.Mesh(geometry, material);
 	}
 	
-	switch(this.name) {
-		case 'n-mesh-collider':
-			var NC = this;
-			
-			this.object.traverse(function (childObj) {
-				if (childObj instanceof THREE.Mesh) {
-					NC.init(childObj);
-				}
-			});
-			return this;
-		break;
-		case 'n-sound':
-			this.data.src = parseAbsURL(this.data.src);
-			return this.init(this.object);
-		break;
-		case 'n-layout-browser':
-			this.data.is3d = this.data.isEnclosure; // Deprecated
-			this.data.url = parseAbsURL(this.data.url);
-			
-			return this.init(this.object);
-		break;
-		case 'n-gltf':
-			this.data.url = parseAbsURL(this.data.url);
-			this.init(this.object);
-		break;
-		default:
-			return this.init(this.object);
+	if(this.data) {
+		
+		if(this.data.isEnclosure) {
+			this.data.is3d = this.data.isEnclosure;
+		}
+		
+		if(this.data.url) this.data.url = parseAbsURL(this.data.url);
+		if(this.data.src) this.data.src = parseAbsURL(this.data.src);
 	}
+	
+	if(this.name == 'n-mesh-collider') {
+		var NC = this;
+		
+		this.object.traverse(function (childObj) {
+			if (childObj instanceof THREE.Mesh) {
+				NC.init(childObj);
+			}
+		});
+		
+		return this;
+	}
+	
+	return this.init(this.object);
 };
 
 NativeComponent.prototype.init = function(object) {
@@ -199,7 +194,7 @@ NativeComponent.prototype.update = function(newData, callback) {
 
 NativeComponent.prototype.call = function(functionName, functionArguments, callback) {
 	if(this.object) {
-		if(this.inClient) altspace.callNativeComponent(this.object, this.name, functionName, functionArguments);
+		if(this.inClient) altspace.callNativeComponentAction(this.object, this.name, functionName, functionArguments);
 		
 		callback && callback(this.object);
 	}
